@@ -2,6 +2,12 @@
 
 All notable changes to `flightmortem` are documented in this file.
 
+## [0.1.1] - 2026-11-24
+
+### Changed
+- Promoted `fm_fft_spectrum` (`flightmortem fft`) from `$0.010` metered to Free (`$0`, zero auth, zero Apify PPE charge) so pilots and agents get full log inspection, battery `R_int`, and Welch Hann gyro/accel FFT + notch targets out of the box (`3` free / `3` metered tools).
+- Added 1-command Claude Code setup, live HTTPS `curl` quickstarts, and verified test results on real upstream `PX4/pyulog`, `ArduPilot/pymavlink`, and `blackbox-log` firmware logs plus live Apify run `pWULcpXsFKlwwIJoz`.
+
 ## [0.1.0] - 2026-11-24
 
 ### Added

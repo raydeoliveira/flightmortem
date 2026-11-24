@@ -18,7 +18,7 @@ Zero-dependency TypeScript UAV blackbox forensics and FFT/PID tuning oracle (`no
 Subcommands (`8`):
 - `inspect` (`fm_inspect_log`) — Free: Parse `.bin`/`.ulog`/`.bbl`/JSON sample counts, duration, sample rate, dropouts, events, and parameters.
 - `power` (`fm_power_health`) — Free: Auto cell count (`1S`–`12S`), resting/min cell voltage, sag `%`, OLS `R_int` (`mOhm` + `R^2`), trapezoidal `mAh`/`Wh`, motor spread/saturation `%`.
-- `fft` (`fm_fft_spectrum`) — Metered (`$0.010`): Cooley-Tukey Welch Hann PSD, MAD noise floor, parabolic sub-bin peak frequency, harmonic tagging, biquad notch & LPF targets.
+- `fft` (`fm_fft_spectrum`) — Free: Cooley-Tukey Welch Hann PSD, MAD noise floor, parabolic sub-bin peak frequency, harmonic tagging, biquad notch & LPF targets.
 - `diagnose` (`fm_crash_diagnose`) — Metered (`$0.020`): Rank 8 failure causes (motor saturation/loss, brownout, EKF divergence, high vibe/clipping, PID/D-term resonance, attitude loss, dropout, failsafe) + timeline in `< 20 KB` fingerprint.
 - `tune` (`fm_tune_diff`) — Metered (`$0.015`): Bounds-clamped `<= 25%`-step PID/notch/LPF diff across `ardupilot`, `px4`, `betaflight`, `inav` with `apply_commands`, `rollback_commands`, and atomic `--out` manifest.
 - `compare` (`fm_compare_flights`) — Metered (`$0.010`): Before/after A/B regression delta across gyro noise dB, attitude RMS error, vibration, motor imbalance, and battery sag.
@@ -33,7 +33,7 @@ Subcommands (`8`):
 - `GET`/`HEAD /.well-known/mcp/server-card.json` (and `GET`/`HEAD /`) — Tool catalog, pricing tiers, auth methods, and `polarCheckoutUrl`.
 - `POST /mcp` — JSON-RPC 2.0 (`initialize`, `ping`, `tools/list`, `tools/call`; flat object schemas without `oneOf`/`anyOf`/`allOf` and read-only/idempotent MCP `annotations`; non-POST returns `405` with `Allow: POST, OPTIONS`; body limit `2,097,152` bytes; decoded `log_base64` limit `1,572,864` bytes).
 
-Authentication for metered tools (`fm_fft_spectrum`, `fm_crash_diagnose`, `fm_tune_diff`, `fm_compare_flights`):
+Authentication for metered tools (`fm_crash_diagnose`, `fm_tune_diff`, `fm_compare_flights`):
 1. `PAYMENT-SIGNATURE` (or `X-PAYMENT` / `Authorization: Payment`) — x402 v2 verify + settle (`PAYMENT-RESPONSE` header on `200`; failed tool execution never settles payment).
 2. `X-Polar-License-Key` — Polar.sh `/validate` (`status === "granted"`).
 3. `Authorization: Bearer <token>` — Constant-time SHA-256 comparison against `API_KEYS_CSV`.

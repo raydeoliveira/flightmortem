@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.raydeoliveira/flightmortem",
   "title": "flightmortem Drone Blackbox & Crash Forensics Oracle (MCP)",
-  "description": "Deterministic ArduPilot, PX4 & Betaflight blackbox crash forensics and PID diffing via HTTP 402.",
-  "version": "0.1.0",
+  "description": "Free .bin/.ulog/.bbl inspect, R_int & gyro FFT + metered crash & PID diff oracle via HTTP 402.",
+  "version": "0.1.1",
   "websiteUrl": "https://github.com/raydeoliveira/flightmortem",
   "repository": {
     "url": "https://github.com/raydeoliveira/flightmortem",
@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "X-Polar-License-Key",
-          "description": "Optional Polar.sh license key unlocking metered FFT, crash diagnose, tune diff, and flight comparison tools.",
+          "description": "Optional Polar.sh license key unlocking metered crash diagnose, tune diff, and flight comparison tools.",
           "isRequired": false,
           "isSecret": true
         },
