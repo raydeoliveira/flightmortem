@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.raydeoliveira/flightmortem",
   "title": "flightmortem Drone Blackbox & Crash Forensics Oracle (MCP)",
-  "description": "Free .bin/.ulog/.bbl inspect, R_int & gyro FFT + metered crash & PID diff oracle via HTTP 402.",
-  "version": "0.1.1",
+  "description": "Free .bin/.ulog/.bbl inspect, FFT & crash forensics + metered PID diff oracle via HTTP 402.",
+  "version": "0.1.2",
   "websiteUrl": "https://github.com/raydeoliveira/flightmortem",
   "repository": {
     "url": "https://github.com/raydeoliveira/flightmortem",

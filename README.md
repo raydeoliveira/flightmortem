@@ -9,7 +9,7 @@ Deterministic ArduPilot `.bin`, PX4 `.ulog`, and Betaflight/INAV `.bbl` flight-l
 | `fm_inspect_log` / `flightmortem inspect` | Free (`$0`) | Parses ArduPilot DataFlash `.bin`, PX4 ULog v1 `.ulog`, Betaflight/INAV `.bbl` (multi-session `--log-index`), or JSON telemetry into sample counts, duration, sample rate, dropouts, events, and parameters |
 | `fm_power_health` / `flightmortem power` | Free (`$0`) | Auto battery cell count (`1S`–`12S` or `BAT_N_CELLS`/override), resting vs min cell voltage, sag `%`, OLS internal resistance `R_int` (`mOhm` + `R^2`), trapezoidal `mAh`/`Wh`, hover throttle, motor spread `%`, and saturation `%` |
 | `fm_fft_spectrum` / `flightmortem fft` | Free (`$0`) | Cooley-Tukey Radix-2 Welch Hann-windowed PSD (detrended 50%-overlap segments), MAD noise floor, parabolic sub-bin peak interpolation, `2x`/`3x`/`4x` harmonic tagging, and biquad notch / gyro LPF / D-term LPF targets |
-| `fm_crash_diagnose` / `flightmortem diagnose` | Metered (`$0.020`) | Ranks 8 failure causes (motor saturation/loss, battery brownout sag, EKF innovation divergence, high vibration/clipping, PID/D-term resonance oscillation, attitude tracking loss, logging dropout, failsafe/error events) + chronological timeline in a `< 20 KB` fingerprint |
+| `fm_crash_diagnose` / `flightmortem diagnose` | Free (`$0`) | Ranks 8 failure causes (motor saturation/loss, battery brownout sag, EKF innovation divergence, high vibration/clipping, PID/D-term resonance oscillation, attitude tracking loss, logging dropout, failsafe/error events) + chronological timeline in a `< 20 KB` fingerprint |
 | `fm_tune_diff` / `flightmortem tune` | Metered (`$0.015`) | Synthesizes ArduPilot, PX4, Betaflight, and INAV PID/notch/LPF adjustments clamped to `max_step_pct <= 25%` and parameter safety bounds, emitting executable `apply_commands`, `rollback_commands`, and atomic `--out` rollback manifests |
 | `fm_compare_flights` / `flightmortem compare` | Metered (`$0.010`) | A/B before/after comparison returning `IMPROVED`/`REGRESSED`/`MIXED`/`UNCHANGED` across gyro noise floor dB, attitude RMS error, vibration RMS, motor imbalance, and battery sag |
 | HTTP `402` & stdio MCP | MCP `2025-03-26` | Hosted Streamable HTTP MCP at `https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp` and local `flightmortem mcp` stdio server |
@@ -81,11 +81,13 @@ API_KEYS_CSV="demo-key" node src/adapters/cli.ts serve --host 127.0.0.1 --port 8
 node src/adapters/cli.ts mcp
 ```
 
-Connect Claude Code in one command (3 free tools — inspect, power, Welch FFT — work immediately with zero signup):
+Connect Claude Code in one command (4 free tools — inspect, power, Welch FFT, crash forensics — work immediately with zero signup):
 
 ```bash
 claude mcp add --transport http flightmortem https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp
 ```
+
+Machine-readable discovery: `GET /llms.txt` and `GET /.well-known/mcp/server-card.json` expose pricing, free tool names, x402 Base USDC parameters, and Polar Pro checkout links.
 
 Or paste this live free Welch FFT test against the hosted Cloudflare Worker:
 
@@ -110,8 +112,8 @@ MCP client JSON (`Cursor`, `Claude Desktop`, `Codex`) with optional Pro key unlo
 }
 ```
 
-- Free tools (`fm_inspect_log`, `fm_power_health`, `fm_fft_spectrum`) work without credentials.
-- Metered tools (`fm_crash_diagnose`, `fm_tune_diff`, `fm_compare_flights`) accept `X-Polar-License-Key`, `PAYMENT-SIGNATURE` (Base Mainnet x402 v2 USDC), or `Authorization: Bearer <token>`, failing closed with HTTP `402` + `PAYMENT-REQUIRED`.
+- Free tools (`fm_inspect_log`, `fm_power_health`, `fm_fft_spectrum`, `fm_crash_diagnose`) work without credentials.
+- Metered tools (`fm_tune_diff`, `fm_compare_flights`) accept `X-Polar-License-Key`, `PAYMENT-SIGNATURE` (Base Mainnet x402 v2 USDC), or `Authorization: Bearer <token>`, failing closed with HTTP `402` + `PAYMENT-REQUIRED`.
 
 ## Exit Codes
 

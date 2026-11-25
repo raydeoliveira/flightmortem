@@ -19,7 +19,7 @@ Subcommands (`8`):
 - `inspect` (`fm_inspect_log`) — Free: Parse `.bin`/`.ulog`/`.bbl`/JSON sample counts, duration, sample rate, dropouts, events, and parameters.
 - `power` (`fm_power_health`) — Free: Auto cell count (`1S`–`12S`), resting/min cell voltage, sag `%`, OLS `R_int` (`mOhm` + `R^2`), trapezoidal `mAh`/`Wh`, motor spread/saturation `%`.
 - `fft` (`fm_fft_spectrum`) — Free: Cooley-Tukey Welch Hann PSD, MAD noise floor, parabolic sub-bin peak frequency, harmonic tagging, biquad notch & LPF targets.
-- `diagnose` (`fm_crash_diagnose`) — Metered (`$0.020`): Rank 8 failure causes (motor saturation/loss, brownout, EKF divergence, high vibe/clipping, PID/D-term resonance, attitude loss, dropout, failsafe) + timeline in `< 20 KB` fingerprint.
+- `diagnose` (`fm_crash_diagnose`) — Free: Rank 8 failure causes (motor saturation/loss, brownout, EKF divergence, high vibe/clipping, PID/D-term resonance, attitude loss, dropout, failsafe) + timeline in `< 20 KB` fingerprint.
 - `tune` (`fm_tune_diff`) — Metered (`$0.015`): Bounds-clamped `<= 25%`-step PID/notch/LPF diff across `ardupilot`, `px4`, `betaflight`, `inav` with `apply_commands`, `rollback_commands`, and atomic `--out` manifest.
 - `compare` (`fm_compare_flights`) — Metered (`$0.010`): Before/after A/B regression delta across gyro noise dB, attitude RMS error, vibration, motor imbalance, and battery sag.
 - `serve` — Start local Node HTTP `402` Streamable HTTP MCP server (`--host`, `--port 0..65535`).
@@ -30,10 +30,11 @@ Subcommands (`8`):
 - **Hosted endpoint**: `https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp`
 - **Polar Pro Checkout (`$29` license)**: `https://buy.polar.sh/polar_cl_qBGivPZfy8sSjg81OkKqtWmXZqGorfs4jLAQC4QojVO`
 - `GET`/`HEAD /health` — Health status, version, protocol version, tool count (`6`).
-- `GET`/`HEAD /.well-known/mcp/server-card.json` (and `GET`/`HEAD /`) — Tool catalog, pricing tiers, auth methods, and `polarCheckoutUrl`.
-- `POST /mcp` — JSON-RPC 2.0 (`initialize`, `ping`, `tools/list`, `tools/call`; flat object schemas without `oneOf`/`anyOf`/`allOf` and read-only/idempotent MCP `annotations`; non-POST returns `405` with `Allow: POST, OPTIONS`; body limit `2,097,152` bytes; decoded `log_base64` limit `1,572,864` bytes).
+- `GET`/`HEAD /llms.txt` — Plain-text agent quickstart with free/metered tools, `claude mcp add`, and payment headers.
+- `GET`/`HEAD /.well-known/mcp/server-card.json` (and `GET`/`HEAD /`) — Tool catalog, pricing tiers, `pricing`, `quickStart`, auth methods, and `polarCheckoutUrl`.
+- `POST /mcp` — JSON-RPC 2.0 (`initialize`, `ping`, `tools/list`, `tools/call`; flat object schemas without `oneOf`/`anyOf`/`allOf` and read-only/idempotent MCP `annotations`; non-POST returns `405` + `Allow: POST, OPTIONS`; body limit `2,097,152` bytes; decoded `log_base64` limit `1,572,864` bytes).
 
-Authentication for metered tools (`fm_crash_diagnose`, `fm_tune_diff`, `fm_compare_flights`):
+Authentication for metered tools (`fm_tune_diff`, `fm_compare_flights`):
 1. `PAYMENT-SIGNATURE` (or `X-PAYMENT` / `Authorization: Payment`) — x402 v2 verify + settle (`PAYMENT-RESPONSE` header on `200`; failed tool execution never settles payment).
 2. `X-Polar-License-Key` — Polar.sh `/validate` (`status === "granted"`).
 3. `Authorization: Bearer <token>` — Constant-time SHA-256 comparison against `API_KEYS_CSV`.

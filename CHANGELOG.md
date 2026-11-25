@@ -2,6 +2,14 @@
 
 All notable changes to `flightmortem` are documented in this file.
 
+## [0.1.2] - 2026-11-24
+
+### Added
+- Exposed `GET`/`HEAD /llms.txt` and enriched `/.well-known/mcp/server-card.json` (`llmsTxt`, `documentationUrl`, structured `pricing`, `quickStart`) for self-discovering AI clients.
+
+### Changed
+- Promoted `fm_crash_diagnose` (`flightmortem diagnose`) from `$0.020` metered to Free (`$0`, zero auth, zero Apify PPE charge) so pilots and agents get full 8-cause crash forensics free alongside `fm_inspect_log`, `fm_power_health`, and `fm_fft_spectrum` (`4` free / `2` metered tools: `fm_tune_diff`, `fm_compare_flights`).
+
 ## [0.1.1] - 2026-11-24
 
 ### Changed
