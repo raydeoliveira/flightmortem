@@ -97,6 +97,8 @@ API_KEYS_CSV="demo-key" node src/adapters/cli.ts serve --host 127.0.0.1 --port 8
 node src/adapters/cli.ts mcp
 ```
 
+From your project directory, run `npx skills add raydeoliveira/flightmortem` to install the [agent reference](SKILL.md) for recorded flight logs and battery resistance.
+
 Connect Claude Code in one command (4 free tools — inspect, power, Welch FFT, crash forensics — work immediately with zero signup):
 
 ```bash
