@@ -1,10 +1,12 @@
-# flightmortem
+# FlightMortem
 
-Deterministic ArduPilot `.bin`, PX4 `.ulog`, and Betaflight/INAV `.bbl` flight-log parser, Cooley-Tukey Welch gyro/accel FFT spectral analyzer, OLS battery internal-resistance (`R_int`) & motor balance estimator, 8-cause crash root-cause fingerprinter, and bounds-clamped PID/filter diffing utility in zero-dependency TypeScript (`node >= 22.18.0`, Cloudflare Workers, and Apify Actor / Standby MCP).
+FlightMortem analyzes recorded ArduPilot DataFlash, PX4 ULog and Betaflight Blackbox flight logs. Use voltage and current samples to estimate battery resistance, or IMU samples to find gyro vibration peaks.
 
 ## Quick Start
 
-Estimate a flight battery's internal resistance from four voltage and current samples. This free hosted call needs only curl and uses the sample readings below.
+[Try FlightMortem on Apify](https://apify.com/raydeoliveira/flightmortem-mcp). Run the prefilled four-sample battery check, then open the default dataset. The single row gives `data.r_int_mohm` of **25 mΩ** and `data.sample_count` of **4**. This example uses zero paid Actor events.
+
+To run the same four readings with curl, call the hosted MCP endpoint.
 
 ```bash
 curl -sS https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp \
