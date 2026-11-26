@@ -2,6 +2,18 @@
 
 Deterministic ArduPilot `.bin`, PX4 `.ulog`, and Betaflight/INAV `.bbl` flight-log parser, Cooley-Tukey Welch gyro/accel FFT spectral analyzer, OLS battery internal-resistance (`R_int`) & motor balance estimator, 8-cause crash root-cause fingerprinter, and bounds-clamped PID/filter diffing utility in zero-dependency TypeScript (`node >= 22.18.0`, Cloudflare Workers, and Apify Actor / Standby MCP).
 
+## Quick Start
+
+Estimate a flight battery's internal resistance from four voltage and current samples. This free hosted call needs only curl and uses the sample readings below.
+
+```bash
+curl -sS https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"fm_power_health","arguments":{"telemetry":{"battery":[{"t_s":0,"voltage_v":25.0,"current_a":0},{"t_s":1,"voltage_v":24.75,"current_a":10},{"t_s":2,"voltage_v":24.5,"current_a":20},{"t_s":3,"voltage_v":24.25,"current_a":30}]}}}}'
+```
+
+The response gives `r_int_mohm` of `25` and `sample_count` of `4` under `result.structuredContent`. To keep the example handy, star [FlightMortem on GitHub](https://github.com/raydeoliveira/flightmortem).
+
 ## What It Does / What It Does Not Do
 
 | Surface / Tool | Tier / Price | What It Does |
@@ -23,7 +35,9 @@ Deterministic ArduPilot `.bin`, PX4 `.ulog`, and Betaflight/INAV `.bbl` flight-l
 
 ## Install & Uninstall
 
-Requires Node.js `>= 22.18.0` (verified on `v25.9.0`; `0` runtime and `0` dev npm dependencies, `237,180` bytes / `231.6 KiB` across `32` TypeScript files and `5,290` lines in `src/`, `300 KB` in `src/` and `432 KB` project total via `du -sk`):
+Use the hosted endpoint with curl or an MCP client. The public GitHub repository contains documentation and MCP metadata. The local CLI and tests require a separate source checkout.
+
+The source checkout requires Node.js `>= 22.18.0` (verified on `v25.9.0`; `0` runtime and `0` dev npm dependencies, `237,180` bytes / `231.6 KiB` across `32` TypeScript files and `5,290` lines in `src/`, `300 KB` in `src/` and `432 KB` project total via `du -sk`):
 
 ```bash
 node --test tests/*.test.ts
@@ -39,9 +53,9 @@ Measured runs on `node v25.9.0` (macOS Arm64):
 
 To uninstall locally, remove the `flightmortem` directory.
 
-## Quick Start
+## CLI and MCP examples
 
-### 1. Human & `--json` Agent CLI
+### 1. Local CLI (source checkout)
 
 Inspect capability schema and exit codes:
 
@@ -73,7 +87,7 @@ node src/adapters/cli.ts compare --baseline before.bin --candidate after.bin --j
 
 ### 2. HTTP `402` Streamable HTTP MCP & Stdio MCP
 
-Dry-run or run the local MCP server:
+From a source checkout, dry-run or run the local MCP server:
 
 ```bash
 node src/adapters/cli.ts serve --dry-run --json
@@ -89,24 +103,13 @@ claude mcp add --transport http flightmortem https://flightmortem-mcp.raymond-de
 
 Machine-readable discovery: `GET /llms.txt` and `GET /.well-known/mcp/server-card.json` expose pricing, free tool names, x402 Base USDC parameters, and Polar Pro checkout links.
 
-Or paste this live free Welch FFT test against the hosted Cloudflare Worker:
-
-```bash
-curl -sS https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp \
-  -H 'Content-Type: application/json' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"fm_power_health","arguments":{"telemetry":{"battery":[{"t_s":0,"voltage_v":25.0,"current_a":0},{"t_s":1,"voltage_v":24.75,"current_a":10},{"t_s":2,"voltage_v":24.5,"current_a":20},{"t_s":3,"voltage_v":24.25,"current_a":30}]}}}}'
-```
-
-MCP client JSON (`Cursor`, `Claude Desktop`, `Codex`) with optional Pro key unlocking crash forensics, bounded PID diffs, and A/B flight compare:
+For a client that accepts `mcpServers` JSON, configure the free hosted tools with the server URL.
 
 ```json
 {
   "mcpServers": {
     "flightmortem": {
-      "url": "https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp",
-      "headers": {
-        "X-Polar-License-Key": "${FLIGHTMORTEM_POLAR_KEY}"
-      }
+      "url": "https://flightmortem-mcp.raymond-deoliveira.workers.dev/mcp"
     }
   }
 }
